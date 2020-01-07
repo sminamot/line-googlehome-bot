@@ -8,4 +8,5 @@ require (
 	github.com/ikasamah/homecast v0.0.0-20181120095505-ae646e87e54e
 	github.com/line/line-bot-sdk-go v6.4.0+incompatible
 	github.com/micro/mdns v0.3.0 // indirect
+	github.com/yosssi/go-voicetext v0.0.0-20180801114841-801caf53e208
 )

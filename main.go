@@ -79,7 +79,7 @@ func speak(text, user string) error {
 
 	for _, device := range devices {
 		//return device.Speak(ctx, text, "ja")
-		u, _ := url.Parse(fmt.Sprintf("http://%s.ngrok.io/voice/line.wav", os.Getenv("NGROK_DOMAIN_ID")))
+		u, _ := url.Parse(fmt.Sprintf("http://%s/voice/line.wav", os.Getenv("MEDIA_DOMAIN")))
 		return device.Play(ctx, u)
 	}
 

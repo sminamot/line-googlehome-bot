@@ -1,0 +1,27 @@
+name: Public Docker image
+on:
+  push:
+    tags:
+      - v*
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: line-googlehome-bot
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Login GitHub Registry
+        run: docker login docker.pkg.github.com -u sminamot -p ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        run: |
+          # use tag for image_tag, 'v1.2.3' -> '1.2.3'
+          IMAGE_TAG=${GITHUB_REF##*/v}
+          docker build -t docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG} --file Dockerfile .
+          echo ::set-env name=IMAGE_TAG::${IMAGE_TAG}
+
+      - name: Push image to GitHub Registry
+        run: docker push docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}

@@ -8,6 +8,8 @@ jobs:
   github:
     name: GitHub Package Registry
     runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: line-googlehome-bot
     steps:
       - uses: actions/checkout@master
 
@@ -23,16 +25,16 @@ jobs:
       - name: Build image
         run: |
           for goarch in amd64 arm; do \
-          docker build -t docker.pkg.github.com/${{ github.repository }}:${IMAGE_TAG}-${goarch} --file Dockerfile .; \
+          docker build -t docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}-${goarch} --file Dockerfile .; \
           done
           # ${IMAGE_TAG}-amd64 -> ${IMAGE_TAG}
-          docker tag docker.pkg.github.com/${{ github.repository }}:${IMAGE_TAG}-amd64 docker.pkg.github.com/${{ github.repository }}:${IMAGE_TAG}
+          docker tag docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}-amd64 docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}
 
       - name: Push image to GitHub Registry
         run: |
           for tag in ${IMAGE_TAG} ${IMAGE_TAG}-amd64 ${IMAGE_TAG}-arm; do \
           echo $goarch; \
-          docker push docker.pkg.github.com/${{ github.repository }}:${tag};\
+          docker push docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${tag};\
           done
 
   dockerhub:

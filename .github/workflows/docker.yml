@@ -5,7 +5,7 @@ on:
       - v*
 jobs:
 
-  github_registry:
+  github:
     name: GitHub Package Registry
     runs-on: ubuntu-latest
     env:

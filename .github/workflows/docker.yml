@@ -5,8 +5,8 @@ on:
       - v*
 jobs:
 
-  build:
-    name: Build
+  github_registry:
+    name: GitHub Package Registry
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: line-googlehome-bot
@@ -16,12 +16,54 @@ jobs:
       - name: Login GitHub Registry
         run: docker login docker.pkg.github.com -u sminamot -p ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build image
+      - name: Set image tag
         run: |
           # use tag for image_tag, 'v1.2.3' -> '1.2.3'
           IMAGE_TAG=${GITHUB_REF##*/v}
-          docker build -t docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG} --file Dockerfile .
           echo ::set-env name=IMAGE_TAG::${IMAGE_TAG}
 
+      - name: Build image
+        run: |
+          for goarch in amd64 arm; do \
+          docker build -t docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}-${goarch} --file Dockerfile .; \
+          done
+
       - name: Push image to GitHub Registry
-        run: docker push docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}
+        run: |
+          for goarch in amd64 arm; do \
+          docker push docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}: \
+          done
+
+  dockerhub:
+    name: DockerHub
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: line-googlehome-bot
+    steps:
+      - uses: actions/checkout@master
+
+      -
+        name: Login DockerHub
+        run: |
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: Set image tag
+        run: |
+          # use tag for image_tag, 'v1.2.3' -> '1.2.3'
+          IMAGE_TAG=${GITHUB_REF##*/v}
+          echo ::set-env name=IMAGE_TAG::${IMAGE_TAG}
+
+      - name: Build image
+        run: |
+          for goarch in amd64 arm; do \
+          docker build -t ${{ github.repository }}:${IMAGE_TAG}-${goarch} --file Dockerfile .; \
+          done
+          # ${IMAGE_TAG}-amd64 -> ${IMAGE_TAG}
+          docker tag ${{ github.repository }}:${IMAGE_TAG}-amd64 ${{ github.repository }}:${IMAGE_TAG}
+
+      - name: Push image to DockerHub
+        run: |
+          for tag in ${IMAGE_TAG} ${IMAGE_TAG}-amd64 ${IMAGE_TAG}-arm; do \
+          echo $goarch; \
+          docker push ${{ github_registry }}:${tag};\
+          done

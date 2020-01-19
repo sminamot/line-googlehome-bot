@@ -1,4 +1,5 @@
 FROM golang:1.13 as builder
+ARG GOARCH=amd64
 
 WORKDIR /app
 

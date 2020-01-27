@@ -13,6 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          version: latest
+
       - name: Login GitHub Registry
         run: docker login docker.pkg.github.com -u sminamot -p ${{ secrets.GITHUB_TOKEN }}
 
@@ -22,20 +28,13 @@ jobs:
           IMAGE_TAG=${GITHUB_REF##*/v}
           echo ::set-env name=IMAGE_TAG::${IMAGE_TAG}
 
-      - name: Build image
+      - name: Build and Publish
         run: |
-          for goarch in amd64 arm; do \
-          docker build -t docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}-${goarch} --file Dockerfile .; \
-          done
-          # ${IMAGE_TAG}-amd64 -> ${IMAGE_TAG}
-          docker tag docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}-amd64 docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}
-
-      - name: Push image to GitHub Registry
-        run: |
-          for tag in ${IMAGE_TAG} ${IMAGE_TAG}-amd64 ${IMAGE_TAG}-arm; do \
-          echo $goarch; \
-          docker push docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${tag};\
-          done
+          docker buildx build \
+            --push \
+            --platform linux/arm/v7,linux/amd64 \
+            -t docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:latest \
+            -t docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG} .
 
   dockerhub:
     name: DockerHub
@@ -54,17 +53,10 @@ jobs:
           IMAGE_TAG=${GITHUB_REF##*/v}
           echo ::set-env name=IMAGE_TAG::${IMAGE_TAG}
 
-      - name: Build image
+      - name: Build and Publish
         run: |
-          for goarch in amd64 arm; do \
-          docker build -t ${{ github.repository }}:${IMAGE_TAG}-${goarch} --file Dockerfile .; \
-          done
-          # ${IMAGE_TAG}-amd64 -> ${IMAGE_TAG}
-          docker tag ${{ github.repository }}:${IMAGE_TAG}-amd64 ${{ github.repository }}:${IMAGE_TAG}
-
-      - name: Push image to DockerHub
-        run: |
-          for tag in ${IMAGE_TAG} ${IMAGE_TAG}-amd64 ${IMAGE_TAG}-arm; do \
-          echo $goarch; \
-          docker push ${{ github.repository }}:${tag};\
-          done
+          docker buildx build \
+            --push \
+            --platform linux/arm/v7,linux/amd64 \
+            -t ${{ github.repository }}/${IMAGE_NAME}:latest \
+            -t ${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG} .

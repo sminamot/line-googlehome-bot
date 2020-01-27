@@ -5,36 +5,36 @@ on:
       - v*
 jobs:
 
-  github:
-    name: GitHub Package Registry
-    runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: line-googlehome-bot
-    steps:
-      - uses: actions/checkout@master
+  #github:
+  #  name: GitHub Package Registry
+  #  runs-on: ubuntu-latest
+  #  env:
+  #    IMAGE_NAME: line-googlehome-bot
+  #  steps:
+  #    - uses: actions/checkout@master
 
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: crazy-max/ghaction-docker-buildx@v1
-        with:
-          version: latest
+  #    - name: Set up Docker Buildx
+  #      id: buildx
+  #      uses: crazy-max/ghaction-docker-buildx@v1
+  #      with:
+  #        version: latest
 
-      - name: Login GitHub Registry
-        run: docker login docker.pkg.github.com -u sminamot -p ${{ secrets.GITHUB_TOKEN }}
+  #    - name: Login GitHub Registry
+  #      run: docker login docker.pkg.github.com -u sminamot -p ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set image tag
-        run: |
-          # use tag for image_tag, 'v1.2.3' -> '1.2.3'
-          IMAGE_TAG=${GITHUB_REF##*/v}
-          echo ::set-env name=IMAGE_TAG::${IMAGE_TAG}
+  #    - name: Set image tag
+  #      run: |
+  #        # use tag for image_tag, 'v1.2.3' -> '1.2.3'
+  #        IMAGE_TAG=${GITHUB_REF##*/v}
+  #        echo ::set-env name=IMAGE_TAG::${IMAGE_TAG}
 
-      - name: Build and Publish
-        run: |
-          docker buildx build \
-            --push \
-            --platform linux/arm/v7,linux/amd64 \
-            -t docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:latest \
-            -t docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG} .
+  #    - name: Build and Publish
+  #      run: |
+  #        docker buildx build \
+  #          --push \
+  #          --platform linux/arm/v7,linux/amd64 \
+  #          -t docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:latest \
+  #          -t docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG} .
 
   dockerhub:
     name: DockerHub

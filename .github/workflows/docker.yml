@@ -63,5 +63,5 @@ jobs:
           docker buildx build \
             --push \
             --platform linux/arm/v7,linux/amd64 \
-            -t ${{ github.repository }}/${IMAGE_NAME}:latest \
-            -t ${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG} .
+            -t ${{ github.repository }}:latest \
+            -t ${{ github.repository }}:${IMAGE_TAG} .

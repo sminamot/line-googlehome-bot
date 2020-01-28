@@ -1,4 +1,4 @@
-name: Public Docker image
+name: Publish Docker image by tag
 on:
   push:
     tags:

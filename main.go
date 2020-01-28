@@ -1,15 +1,13 @@
 package main
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 
-	"github.com/ikasamah/homecast"
+	"github.com/evalphobia/google-home-client-go/googlehome"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/yosssi/go-voicetext"
 )
@@ -70,18 +68,36 @@ func main() {
 }
 
 func speak(text, user string) error {
-	ctx := context.Background()
-	devices := homecast.LookupAndConnect(ctx)
+	cli, err := googlehome.NewClientWithConfig(googlehome.Config{
+		Hostname: os.Getenv("GOOGLE_HOME_IP"),
+		Lang:     "ja",
+	})
+
+	if err != nil {
+		return err
+	}
 
 	if user != "" {
 		text = fmt.Sprintf("%sからのメッセージが届きました。。。%s", user, text)
 	}
 
-	for _, device := range devices {
-		//return device.Speak(ctx, text, "ja")
-		u, _ := url.Parse(fmt.Sprintf("http://%s/voice/line.wav", os.Getenv("MEDIA_DOMAIN")))
-		return device.Play(ctx, u)
-	}
+	cli.Play("http://127.0.0.1/voice/line.wav")
+
+	return nil
+	/*
+		ctx := context.Background()
+		devices := homecast.LookupAndConnect(ctx)
+
+		if user != "" {
+			text = fmt.Sprintf("%sからのメッセージが届きました。。。%s", user, text)
+		}
+
+		for _, device := range devices {
+			//return device.Speak(ctx, text, "ja")
+			u, _ := url.Parse(fmt.Sprintf("http://%s/voice/line.wav", os.Getenv("MEDIA_DOMAIN")))
+			return device.Play(ctx, u)
+		}
+	*/
 
 	return errors.New("not found devices")
 }

@@ -80,8 +80,8 @@ func speak(text, user string) error {
 		text = fmt.Sprintf("%sからのメッセージが届きました。。。%s", user, text)
 	}
 
-	//cli.Play(fmt.Sprintf("http://127.0.0.1:%s/voice/line.wav", os.Getenv("PORT")))
-	return cli.Play("http://localhost:8080/voice/line.wav")
+	// return cli.Play(fmt.Sprintf("http://127.0.0.1:%s/voice/line.wav", os.Getenv("PORT")))
+	return cli.Play(fmt.Sprintf("http://%s/voice/line.wav", os.Getenv("MEDIA_DOMAIN")))
 	/*
 		    ctx := context.Background()
 		    devices := homecast.LookupAndConnect(ctx)

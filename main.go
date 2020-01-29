@@ -82,24 +82,7 @@ func speak(text, user string) error {
 
 	// return cli.Play(fmt.Sprintf("http://127.0.0.1:%s/voice/line.wav", os.Getenv("PORT")))
 	url := fmt.Sprintf("http://%s/voice/line.wav", os.Getenv("MEDIA_DOMAIN"))
-	fmt.Println(url)
 	return cli.Play(url)
-	/*
-		    ctx := context.Background()
-		    devices := homecast.LookupAndConnect(ctx)
-
-		    if user != "" {
-		        text = fmt.Sprintf("%sからのメッセージが届きました。。。%s", user, text)
-		    }
-
-		    for _, device := range devices {
-		        //return device.Speak(ctx, text, "ja")
-		        u, _ := url.Parse(fmt.Sprintf("http://%s/voice/line.wav", os.Getenv("MEDIA_DOMAIN")))
-		        return device.Play(ctx, u)
-		    }
-
-			return errors.New("not found devices")
-	*/
 }
 
 func saveWav(text, user string) error {

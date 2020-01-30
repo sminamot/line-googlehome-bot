@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: line-googlehome-bot
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: line-googlehome-bot
+  template:
+    metadata:
+      labels:
+        app: line-googlehome-bot
+    spec:
+      containers:
+      - image: sminamot/line-googlehome-bot:latest
+        name: line-googlehome-bot
+        env:
+        - name: PORT
+          value: "8080"
+        - name: GOOGLE_HOME_IP
+          value: "172.22.1.31"
+        - name: CHANNEL_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: line-googlehome-bot-secret
+              key: channel_secret
+        - name: CHANNEL_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: line-googlehome-bot-secret
+              key: channel_token
+        - name: VOICETEXT_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: line-googlehome-bot-secret
+              key: voice_api_key
+        - name: AWS_S3_BUCKET
+          value: "line-googlehome-bot"
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret
+              key: aws_access_key_id
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret
+              key: aws_secret_access_key

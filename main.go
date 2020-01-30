@@ -48,20 +48,9 @@ func main() {
 					if err == nil {
 						userName = profile.DisplayName
 					}
-					/*
-						if err := saveWav(message.Text, userName); err != nil {
-							log.Print(err)
-							continue
-						}
-					*/
 					if err := speak(message.Text, userName); err != nil {
 						log.Print(err)
 					}
-					/*
-						if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
-							log.Print(err)
-						}
-					*/
 				}
 			}
 		}
@@ -95,8 +84,6 @@ func speak(text, user string) error {
 		return err
 	}
 
-	// return cli.Play(fmt.Sprintf("http://127.0.0.1:%s/voice/line.wav", os.Getenv("PORT")))
-	// url := fmt.Sprintf("http://%s/voice/line.wav", os.Getenv("MEDIA_DOMAIN"))
 	return cli.Play(url)
 }
 
@@ -162,30 +149,3 @@ func requestVoiceTextWebAPI(key string, values url.Values) (*http.Response, erro
 
 	return http.DefaultClient.Do(req)
 }
-
-/*
-func saveWav(text, user string) error {
-	c := voicetext.NewClient(os.Getenv("VOICETEXT_API_KEY"), nil)
-	result, err := c.TTS(fmt.Sprintf("%sからのメッセージが届きました。%s", user, text), &voicetext.TTSOptions{
-		Speaker: voicetext.SpeakerHikari,
-		Volume:  200,
-	})
-	if err != nil {
-		return err
-	}
-
-	if result.ErrMsg != nil {
-		return fmt.Errorf("%s", result.ErrMsg)
-	}
-
-	f, err := os.Create("./static/line.wav")
-	if err != nil {
-		return err
-	}
-
-	defer f.Close()
-
-	_, err = f.Write(result.Sound)
-	return err
-}
-*/

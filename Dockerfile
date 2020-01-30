@@ -12,6 +12,5 @@ RUN CGO_ENABLED=0 go build -o line-googlehome-bot
 FROM alpine:3.11
 WORKDIR /app
 COPY --from=builder /app/line-googlehome-bot .
-RUN mkdir -p /app/static
 
 ENTRYPOINT ["/app/line-googlehome-bot"]

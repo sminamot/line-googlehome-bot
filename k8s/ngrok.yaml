@@ -24,6 +24,6 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: line-googlehome-bot-secret
-                  key: channel_token
+                  key: ngrok_auth_key
             - name: NGROK_REGION
               value: ap

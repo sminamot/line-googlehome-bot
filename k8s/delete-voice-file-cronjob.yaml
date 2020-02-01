@@ -1,0 +1,31 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: delete-voice-file
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - image: sminamot/delete-s3-objects:0.1.0
+              name: delete-voice-file
+              env:
+                - name: TARGET_TIME
+                  value: "1800"
+                - name: REGION
+                  value: ap-northeast-1
+                - name: BUCKET
+                  value: line-googlehome-bot
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: aws-secret
+                      key: aws_access_key_id
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: aws-secret
+                      key: aws_secret_access_key
+          restartPolicy: Never
+  schedule: '*/30 * * * *'

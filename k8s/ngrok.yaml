@@ -15,8 +15,6 @@ spec:
       containers:
         - name: ngrok
           image: wernight/ngrok:armhf
-          command: ["ngrok"]
-          args: ["http", "line-googlehome-bot-service"]
           ports:
             - containerPort: 4040
           env:
@@ -27,3 +25,5 @@ spec:
                   key: ngrok_auth_key
             - name: NGROK_REGION
               value: ap
+            - name: NGROK_PORT
+              value: line-googlehome-bot-service

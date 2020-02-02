@@ -8,7 +8,7 @@ spec:
       template:
         spec:
           containers:
-            - image: sminamot/delete-s3-objects:0.1.0
+            - image: sminamot/delete-s3-objects:0.2.0
               name: delete-voice-file
               env:
                 - name: TARGET_TIME

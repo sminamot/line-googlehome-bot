@@ -3,5 +3,13 @@
 ## usage
 ```
 $ go build
-$ CHANNEL_SECRET=<Channel secret> CHANNEL_TOKEN=<Channel access token> PORT=<app port> MEDIA_DOMAIN=<local domain(cannot use localhost)> VOICETEXT_API_KEY=<VoiceText WebAPI key> ./line-googlehome-bot
+$ GOOGLE_HOME_IP=<googlehome ip>
+  CHANNEL_SECRET=<line channel secret> \
+  CHANNEL_TOKEN=<line channel access token> \
+  PORT=<app port> \
+  VOICETEXT_API_KEY=<VoiceText WebAPI key> \
+  AWS_S3_BUCKET=<AWS s3 bucket name>
+  AWS_ACCESS_KEY_ID=<AWS access key(if necessary)>
+  AWS_SECRET_ACCESS_KEY=<AWS secret access key(if necessary)>
+  ./line-googlehome-bot
 ```

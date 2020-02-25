@@ -1,4 +1,4 @@
-line-googlehome-bot
+./line-googlehome-bot
 static/*
 !static/.gitkeep
 *secret.yaml

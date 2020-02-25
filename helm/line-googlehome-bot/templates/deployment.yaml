@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+      - image: sminamot/line-googlehome-bot:{{ .Values.image.tag }}
+        name: {{ .Release.Name }}
+        env:
+        - name: PORT
+          value: {{ .Values.app.port | quote }}
+        - name: GOOGLE_HOME_IP
+          value: {{ .Values.app.googlehomeIp }}
+        - name: CHANNEL_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: channel_secret
+        - name: CHANNEL_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: channel_token
+        - name: VOICETEXT_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: voice_api_key
+        - name: AWS_S3_BUCKET
+          value: {{ .Values.app.s3Bucket }}
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret
+              key: aws_access_key_id
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret
+              key: aws_secret_access_key

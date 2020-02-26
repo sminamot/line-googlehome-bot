@@ -22,7 +22,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Release.Name }}-secret
-                  key: ngrok_auth_key
+                  key: ngrokAuthKey
             - name: NGROK_REGION
               value: ap
             - name: NGROK_PORT

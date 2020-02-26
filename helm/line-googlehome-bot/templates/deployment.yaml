@@ -11,6 +11,8 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}
+      annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     spec:
       containers:
       - image: sminamot/line-googlehome-bot:{{ .Values.image.tag }}
@@ -24,26 +26,26 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ .Release.Name }}-secret
-              key: channel_secret
+              key: lineChannelSecret
         - name: CHANNEL_TOKEN
           valueFrom:
             secretKeyRef:
               name: {{ .Release.Name }}-secret
-              key: channel_token
+              key: lineChannelToken
         - name: VOICETEXT_API_KEY
           valueFrom:
             secretKeyRef:
               name: {{ .Release.Name }}-secret
-              key: voice_api_key
+              key: voiceApiKey
         - name: AWS_S3_BUCKET
           value: {{ .Values.app.s3Bucket }}
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
             secretKeyRef:
               name: aws-secret
-              key: aws_access_key_id
+              key: awsAccessKeyId
         - name: AWS_SECRET_ACCESS_KEY
           valueFrom:
             secretKeyRef:
               name: aws-secret
-              key: aws_secret_access_key
+              key: awsSecretAccessKey

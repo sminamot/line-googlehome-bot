@@ -1,4 +1,4 @@
 ./line-googlehome-bot
 static/*
 !static/.gitkeep
-*secret.yaml
+k8s/*secret.yaml

@@ -13,3 +13,16 @@ $ GOOGLE_HOME_IP=<googlehome ip> \
   AWS_SECRET_ACCESS_KEY=<AWS secret access key(if necessary)> \
   ./line-googlehome-bot
 ```
+
+## k8s
+### helm
+```
+# install
+$ helm secrets install -f helm/helm_vars/secrets.yaml --name line-googlehome-bot ./helm/line-googlehome-bot
+
+# update
+$ helm secrets upgrade -f helm/helm_vars/secrets.yaml line-googlehome-bot ./helm/line-googlehome-bot
+
+# update secrets
+$ helm secrets edit helm/helm_vars/secrets.yaml
+```

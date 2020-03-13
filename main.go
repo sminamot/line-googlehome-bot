@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -18,6 +19,7 @@ import (
 )
 
 const voinceTextWebAPIURL = "https://api.voicetext.jp/v1/tts"
+const defaultPort = "80"
 
 func main() {
 	bot, err := linebot.New(
@@ -60,7 +62,11 @@ func main() {
 
 	// This is just sample code.
 	// For actual use, you must support HTTPS by using `ListenAndServeTLS`, a reverse proxy or something else.
-	if err := http.ListenAndServe(":"+os.Getenv("PORT"), nil); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = defaultPort
+	}
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -82,6 +88,20 @@ func speak(text, user string) error {
 	url, err := getVoiceURL(text)
 	if err != nil {
 		return err
+	}
+
+	// set volume
+	if v := os.Getenv("VOLUME"); v != "" {
+		vol, _ := strconv.ParseFloat(v, 64)
+		if vol != 0 {
+			cVol, err := cli.GetVolume()
+			if err != nil {
+				return err
+			}
+			cli.SetVolume(vol)
+			// restore volume after playing
+			defer cli.SetVolume(cVol)
+		}
 	}
 
 	return cli.Play(url)

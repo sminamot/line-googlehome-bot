@@ -8,6 +8,7 @@ $ GOOGLE_HOME_IP=<googlehome ip> \
   CHANNEL_TOKEN=<line channel access token> \
   PORT=<app port> \
   VOLUME=<googlehome volume> \
+  VOLUME_RESTORE_TIME=<volume restore time> \
   VOICETEXT_API_KEY=<VoiceText WebAPI key> \
   AWS_S3_BUCKET=<AWS s3 bucket name> \
   AWS_ACCESS_KEY_ID=<AWS access key(if necessary)> \
@@ -24,6 +25,7 @@ $ GOOGLE_HOME_IP=<googlehome ip> \
 |CHANNEL_TOKEN|line channel access token||
 |PORT|app port|80|
 |VOLUME|google home's volume|your setting volume|
+|VOLUME_RESTORE_TIME|wait time to restore volume after playing||
 |VOICETEXT_API_KEY|VoiceText WebAPI key||
 |AWS_S3_BUCKET|AWS s3 bucket name||
 |AWS_ACCESS_KEY_ID|<AWS access key(if necessary)>||

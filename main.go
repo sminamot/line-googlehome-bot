@@ -100,7 +100,14 @@ func speak(text, user string) error {
 			}
 			cli.SetVolume(vol)
 			// restore volume after playing
-			defer cli.SetVolume(cVol)
+			defer func() {
+				// cli.Play実行直後にもとに戻ってしまうため、sleepを挟む
+				s := os.Getenv("VOLUME_RESTORE_TIME")
+				if ss, _ := strconv.Atoi(s); ss != 0 {
+					time.Sleep(time.Duration(ss) * time.Second)
+				}
+				cli.SetVolume(cVol)
+			}()
 		}
 	}
 

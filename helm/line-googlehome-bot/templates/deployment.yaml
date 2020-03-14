@@ -22,6 +22,8 @@ spec:
           value: {{ .Values.app.port | quote }}
         - name: GOOGLE_HOME_IP
           value: {{ .Values.app.googlehomeIp }}
+        - name: VOLUME
+          value: {{ .Values.app.volume | quote }}
         - name: CHANNEL_SECRET
           valueFrom:
             secretKeyRef:

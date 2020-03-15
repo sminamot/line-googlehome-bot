@@ -24,6 +24,8 @@ spec:
           value: {{ .Values.app.googlehomeIp }}
         - name: VOLUME
           value: {{ .Values.app.volume | quote }}
+        - name: VOLUME_RESTORE_TIME
+          value: {{ .Values.app.volumeRestoreTime | quote }}
         - name: CHANNEL_SECRET
           valueFrom:
             secretKeyRef:
